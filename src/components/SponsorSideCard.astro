@@ -1,0 +1,41 @@
+
+<style lang="scss">
+  @import "../vars.scss";
+
+    .sponsor-side-card {
+    display: block;
+    position: relative;
+
+    background-image: url("/media/sponsor-card.jpg");
+    background-size: cover;
+    background-position: center;
+    padding: 50px 0;
+    
+    color: white;
+
+    width: 360px;
+    height: 400px;
+    margin: 0 10px;
+  }
+  .sponsor-side-card:hover span.heading {
+    opacity: 1;
+  }
+  .sponsor-side-card span.heading {
+    font-size: 1.5rem;
+    margin: 0;
+    padding: 1rem 0;
+    text-align: center;
+    color: white;
+    background-color: $lorikeet-blue;
+
+    opacity:0.9;
+
+    position: absolute;
+    width: 100%;
+    top: 10%;
+  }
+</style>
+
+<a href="/sponsor" class="sponsor-side-card">
+    <span class="heading">Sponsor</span>
+</a>

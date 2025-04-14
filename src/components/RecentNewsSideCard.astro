@@ -1,0 +1,132 @@
+---
+import { getCollection, CollectionEntry } from "astro:content"
+
+export async function getStaticPaths() {
+  const pages = await getCollection("pages")
+  return pages.map((entry) => ({
+    params: { slug: entry.slug },
+    props: { entry },
+  }))
+}
+
+export type Props = {
+  entry: CollectionEntry<"pages">
+}
+const { entry } = Astro.props as Props
+
+// Fetch and filter news pages
+const newsPages = (await getCollection("pages"))
+  .filter((page) => page.slug.startsWith("news/"))
+  .sort((a, b) => (a.data.date ?? 0) - (b.data.date ?? 0))
+
+---
+<style lang="scss">
+    @import "../vars.scss";
+
+    .side-card {
+        display: flex;
+        flex-direction: column;
+        padding: 0 10px;
+    }
+    .news-heading {
+        font-size: 1.2rem;
+        font-weight: bold;
+
+        text-align: center;
+        color: black;
+
+        padding: 0.5rem;
+
+        border-bottom: 1px solid black;
+
+        margin-bottom: 0.5rem;
+    }
+
+    .news-list li {
+        padding: 0.5rem 0rem;
+        display: flex;
+        flex-direction: column;
+
+        font-weight:bold;
+        font-size: 1rem;
+        color: black;
+
+        list-style: none;
+    }
+    .news-list li:hover {
+        // background-color: #f9f9f9; // Made the grey lighter
+        // border-radius: 5px;
+        
+    }
+    .news-list li div:first-of-type {
+        display: flex;
+        width: 100%;
+        justify-content: space-between;
+        margin-top: 0.25rem;
+        margin-bottom: 0.25rem;
+    }
+    .news-list li div:first-of-type span {
+        padding-right: 1rem;
+    }
+    .news-list li a {
+        text-decoration: none;
+        color: black;
+        font-weight: bold;
+    }
+    .news-list li a:hover {
+        border-left: 5px solid $wattle-leaf;
+        margin-left: -10px;
+        padding-left: 5px;
+    }
+    
+    .news-list li .icon-chevron {
+        flex-shrink: 0;
+        // width: 1rem;
+    }
+    .news-list li small {
+        font-size: 0.8rem;
+        font-weight: normal;
+    }
+
+    .empty-news {
+        margin-top: 1rem;
+        padding-top: 2rem;
+        padding-bottom: 2rem;
+        text-align: center;
+        background: #f9f9f9;
+        border-radius: 5px;
+        color: #888;
+    }
+</style>
+
+
+<div class="side-card">
+    
+            
+    <span class="news-heading">News &amp; Announcements</span>
+    <ul class="news-list">
+    {newsPages.map((page) => (
+        <li>
+            <a href={`/${page.slug}`}>
+                <div>
+                    <span>{page.data.title}</span>
+
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.0" stroke="currentColor" style="height: 1rem;" class="icon-chevron">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5" />
+                    </svg>
+                </div>
+                <small>{new Date(page.data.date).toLocaleDateString('en-GB', { day: '2-digit', month: 'long', year: 'numeric' })}</small>
+            </a>
+        </li>
+    ))}
+    </ul>
+
+    {
+        newsPages.length === 0 && (
+            <div class="empty-news">
+                <p>There are no news articles available at this time.</class="page-nav">
+            </div>
+        )
+    }
+
+</div>

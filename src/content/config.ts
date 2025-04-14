@@ -14,7 +14,7 @@ const sponsors = defineCollection({
   }),
 })
 const pages = defineCollection({
-  schema: z.object({ title: z.string(), order: z.number().optional() }),
+  schema: z.object({ title: z.string(), order: z.number().optional(), date: z.date().optional() }),
 })
 const tracks = defineCollection({
   schema: z.object({ name: z.string() }),

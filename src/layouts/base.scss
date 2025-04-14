@@ -58,7 +58,7 @@ main {
 
 $logo-w-ratio: 3.577;
 
-header {
+body > header {
   background-color: $wattle-leaf;
   background-image: url("./duotone-original.jpg");
   background-repeat: no-repeat;
@@ -394,4 +394,9 @@ table {
     margin-bottom: 0;
   }
   margin: 20px 0;
+}
+
+
+.side-card {
+  max-width: 360px;
 }

@@ -1,0 +1,186 @@
+---
+import SponsorSideCard from "../components/SponsorSideCard.astro"
+import RecentNewsSideCard from "../components/RecentNewsSideCard.astro"
+import Base from "../layouts/Base.astro"
+
+import { getCollection, CollectionEntry } from "astro:content"
+
+export async function getStaticPaths() {
+  const pages = await getCollection("pages")
+  return pages.map((entry) => ({
+    params: { slug: entry.slug },
+    props: { entry },
+  }))
+}
+
+export type Props = {
+  entry: CollectionEntry<"pages">
+}
+const { entry } = Astro.props as Props
+
+// Fetch and filter news pages
+const newsPages = (await getCollection("pages"))
+  .filter((page) => page.slug.startsWith("news/"))
+  .sort((a, b) => (a.data.date ?? 0) - (b.data.date ?? 0))
+---
+
+<style lang="scss">
+  @import "../vars.scss";
+
+  .page {
+    display: flex;
+    flex-direction: column;
+    width: 1080px;
+    margin-top: 2rem;
+    margin-left: auto;
+    margin-right: auto;
+    // padding: 0 10px;
+  }
+  .page header {
+    margin-top: 100px;
+    margin: 0 10px;
+    position: relative;
+
+    background-image: url("/media/news-hero.jpg");
+    background-size: cover;
+    background-position: center;
+    padding: 50px 0;
+    text-align: center;
+    color: white;
+
+    height: 300px;
+  }
+  .page .banner-lower h1 {
+    font-size: 1.5rem;
+    margin: 0;
+    padding: 1rem 0;
+    text-align: center;
+    color: white;
+    background-color: $wattle-leaf-headings;
+
+    opacity: 0.9;
+
+
+    position: absolute;
+    width: 100%;
+    bottom: 20%;
+  }
+
+  .page aside {
+    width: 380px;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+  }
+
+  .page aside > * {
+    margin-top: 1rem;
+    margin-bottom: 1.2rem;
+    
+  }
+
+  .news-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .news-list li {
+        padding: 0.5rem 0rem;
+        display: flex;
+        flex-direction: column;
+
+        font-weight: bold;
+        font-size: 1.5rem;
+        color: black;
+
+        list-style: none;
+    }
+    .news-list li div:first-of-type {
+        display: flex;
+        width: 100%;
+        justify-content: space-between;
+    }
+
+    .news-list li div:first-of-type span {
+        padding-right: 1rem;
+    }
+    .news-list li .icon-chevron {
+        flex-shrink: 0;
+    }
+    .news-list li a {
+        text-decoration: none;
+        color: black;
+        font-weight: bold;
+    }
+    .news-list li a:hover {
+        border-left: 5px solid $wattle-leaf;
+        margin-left: -10px;
+        padding-left: 5px;
+    }
+    .news-list li small {
+        font-size: 1rem;
+        font-weight: normal;
+    }
+
+  .page article {
+    display: flex;
+    justify-content: space-between;
+  }
+  .page article main {
+    width: 100%;
+    max-width: 660px;
+    margin: 0 10px 0 0;
+    // margin-right: 10px;
+    
+    // margin: 0 10px;
+    padding: 0 0px;
+  }
+</style>
+
+<Base title="News">
+  <div class="page">
+
+    <header class="banner-lower">
+        <h1>News &amp; Announcements</h1>
+
+    </header>
+
+    <article>
+
+        <aside>
+            <!-- Recent News -->
+            <div><RecentNewsSideCard /></div>
+            <!-- Sponsor Side Card -->
+            <div> <SponsorSideCard /></div>
+            <!-- Join the team Side Card -->
+            <!-- TODO -->
+        </aside>
+
+        <main>
+            <h1>News</h1>
+            {
+                newsPages.length === 0 && (
+                    <p>There are no news articles available at this time.</p>
+                )
+            }
+
+            <ul class="news-list">
+            {newsPages.map((page) => (
+                <li>
+                    <a href={`/${page.slug}`}>
+                        <div>
+                            <span>{page.data.title}</span>
+
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.0" stroke="currentColor" style="height: 1rem;" class="icon-chevron">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5" />
+                            </svg>
+                        </div>
+                        <small>{new Date(page.data.date).toLocaleDateString('en-GB', { day: '2-digit', month: 'long', year: 'numeric' })}</small>
+                    </a>
+                </li>
+            ))}
+            </ul>
+        </main>
+    </article>
+</div>
+</Base>
