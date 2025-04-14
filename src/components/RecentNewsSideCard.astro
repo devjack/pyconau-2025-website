@@ -97,6 +97,26 @@ const newsPages = (await getCollection("pages"))
         border-radius: 5px;
         color: #888;
     }
+
+    .all-news {
+        display: flex;
+        justify-content: end;
+        align-items: center;
+        text-decoration: none;
+        color: black;
+        font-weight: norma;
+
+        margin-top: 1rem;
+        padding-top: 0.5rem;
+        padding-bottom: 0.5rem;
+
+        &:hover  {
+            color: $wattle-leaf;
+            text-decoration: none;
+            border-left: 5px solid $wattle-leaf;
+            padding-left: 5px;
+        }
+    }
 </style>
 
 
@@ -122,10 +142,17 @@ const newsPages = (await getCollection("pages"))
     </ul>
 
     {
-        newsPages.length === 0 && (
+        newsPages.length === 0 ? (
             <div class="empty-news">
-                <p>There are no news articles available at this time.</class="page-nav">
+                <p>There are no news articles available at this time.</p>
             </div>
+        ) : (
+            <a href="/news" class="all-news">
+                <span>View all news</span>
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.0" stroke="currentColor" style="height: 1rem;" class="icon-chevron">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5" />
+                    </svg>
+            </a>
         )
     }
 
